@@ -5,18 +5,13 @@ image:
 
 stages:
   - validate
+  # - copy_files
   # - update_razor
-  # - categorise_node
 
 validate:
   stage: validate
   script:
     - : # simple syntax etc check
-
-#classify_node:
-#  stage: classify_node
-#  script:
-#    - : # 
 #  when: manual
 
 
