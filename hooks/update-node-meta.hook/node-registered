@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require 'json'
+
+nodes_file = "/var/local/razor/nodes.yaml"
+
+# Get input from the event.
+input = STDIN.read
+STDIN.close_read
+input = JSON.parse(input)
+
+# Load our metadata file.
+all_node_meta = YAML.load_file(nodes_file)
+
+# Select the relevant hash from the metadata file.
+cur_node_name = input['node']['name'] # Should these be symbols instead?
+node_meta = all_node_meta.select { |n| n == cur_node_name }
+
+# Set new metadata tags.
+new_hostname = node_meta[cur_node_name]['hostname']
+fqdn = node_meta[cur_node_name]['fqdn'] # (new tag)
+
+# Output changed / additional metadata tags.
+output = {
+           'node' => {
+             'metadata' => {
+               'update' => {
+                 'hostname' => new_hostname
+               }
+             }
+           }
+         }
+puts output.to_json

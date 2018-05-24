@@ -1,0 +1,4 @@
+---
+
+node-registered:
+  description: "Update node metadata"
