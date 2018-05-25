@@ -1,7 +1,0 @@
-{
-  "name": "Intel-32CPU-S2600GZ",
-  "rule": ["and",
-            ["=", ["fact", "boardmanufacturer"], "Intel Corporation"],
-            ["=", ["fact", "processorcount"], "32"],
-            ["=", ["fact", "boardproductname"], "S2600GZ"]]
-}
