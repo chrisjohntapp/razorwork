@@ -1,4 +1,4 @@
-# razor-work
+# razorwork
 
 ## Introduction
 Each top-level directory in this repo contains yaml files representing razor

@@ -1,0 +1,11 @@
+Layout/IndentationWidth:
+  # Number of spaces for each indentation level.
+  Width: 4
+AllCops:
+  TargetRubyVersion: 2.3.3
+Style/DocumentationMethod:
+  RequireForNonPublicMethods: false
+Style/GlobalVars:
+  AllowedVariables: ['$client', '$collection_urls', '$command_urls']
+Metrics/MethodLength:
+  Max: 16
