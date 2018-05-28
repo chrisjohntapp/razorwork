@@ -38,7 +38,9 @@ module RazorWork
             def self.retrieve_current_config(tag_name)
                 begin
                     current_config = JSON.parse(
-                        RestClient.get("#{$collection_urls['tags']}/#{tag_name}")
+                        RestClient.get(
+                            "#{$collection_urls['tags']}/#{tag_name}"
+                        )
                     )
                 rescue StandardError => e
                     RazorWork.log.error(e.message)
@@ -69,6 +71,7 @@ module RazorWork
             end
         end
 
+        # Create.
         module Create
             def self.create_tag(name, config)
                 begin
@@ -77,11 +80,11 @@ module RazorWork
                         config.to_json,
                         content_type: :json, accept: :json
                     )
-                rescue => e
+                rescue StandardError => e
                     RazorWork.log.error('Error while creating tag.')
                     RazorWork.log.error(e.message)
                     RazorWork.log.debug(e.backtrace)
-                    raise StandardError
+                    raise
                 end
                 RazorWork.log.info("Tag #{name} created.")
             end
@@ -107,7 +110,7 @@ module RazorWork
 
             def self.update_fields(tag_name, desired_config)
                 current_config = Check.retrieve_current_config(tag_name)
- 
+
                 # Call 'update_*' method on each field which differs from
                 # current config.
                 desired_config.each do |key, value|
@@ -136,7 +139,9 @@ module RazorWork
                 find_files.each do |file|
                     desired_config = YAML.load_file(file)
                     tag_name = desired_config['name']
-                    RazorWork.log.debug("Loaded config from #{file}: #{desired_config}")
+                    RazorWork.log.debug(
+                        "Loaded config from #{file}: #{desired_config}"
+                    )
 
                     current_tags = Check.retrieve_tags
                     if Check.find_match(tag_name, current_tags)
@@ -144,18 +149,22 @@ module RazorWork
 
                         current_config = Check.retrieve_current_config(tag_name)
 
-                        if Check.check_fields_updatable(current_config, desired_config)
-                            RazorWork.log.info("All changed fields for #{tag_name} are
-                                updatable.")
+                        if Check.check_fields_updatable(
+                            current_config, desired_config
+                        )
+                            RazorWork.log.info(
+                                "All changed fields for #{tag_name} are
+                                updatable."
+                            )
                             Update.update_fields(tag_name, desired_config)
                         else
-                            RazorWork.log.error("You are trying to change one or more
-                                fields of #{tag_name} for which the Razor API does not
-                                support in-place updates.")
+                            RazorWork.log.error("You are trying to change one or
+                                more fields of #{tag_name} for which the Razor
+                                API does not support in-place updates.")
                             raise RazorError.APILimitation
                         end
                     else
-                        RazorWork.log.info("Tag #{tag_name} not found; creating it.")
+                        RazorWork.log.info("Tag #{tag_name} not found.")
                         Create.create_tag(tag_name, desired_config)
                     end
                 end
