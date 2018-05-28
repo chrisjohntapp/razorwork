@@ -8,7 +8,7 @@
 
 ---
 name: test
-rule: ["and", ["=", ["fact", "boardmanufacturer"], "Intel Corporation"], ["=", ["fact", "processorcount"], "32"], ["=", ["fact", "boardproductname"], "S2600GZ"]]
+rule: ["and", ["=", ["fact", "boardmanufacturer"], "Intel Corporation"], ["=", ["fact", "processorcount"], "555"], ["=", ["fact", "boardproductname"], "S2600GZ"]]
 #- and
 #- - "="
 #  - - fact

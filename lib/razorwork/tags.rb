@@ -5,12 +5,30 @@ module RazorWork
     # Create / Update / Delete tags.
     module Tags
         def self.check_tag_exists(name)
-            all_tags = JSON.parse(RestClient.get($collection_urls['tags']))
-            all_tags['items'].each do |tag|
-                return false unless tag.key?('name') && tag['name'] == name
-                RazorWork.log("Existing tag named #{name} found.")
-                return true
+            begin
+                all_tags = JSON.parse(RestClient.get($collection_urls['tags']))
+            rescue => e
+                RazorWork.log.error('Error while retrieving tag.')
+                RazorWork.log.error(e.message)
+                RazorWork.log.debug(e.backtrace)
+                raise StandardError
             end
+            RazorWork.log.debug("All tags: #{all_tags['items']}")
+
+            all_tags['items'].each do |tag|
+                RazorWork.log.info("Checking #{tag['name']}.")
+                tag.each do |key, value|
+                    if key == 'name' && value == name
+                        RazorWork.log.info("Found existing tag named #{name}.")
+                        return true
+                    else
+                        RazorWork.log.info('No match, try the next tag.')
+                        next
+                    end
+                end
+            end
+            RazorWork.log.info("Tag named #{name} not found.")
+            return false
         end
 
         def self.create_tag(name, config)
@@ -24,6 +42,7 @@ module RazorWork
                 RazorWork.log.error('Error while creating tag.')
                 RazorWork.log.error(e.message)
                 RazorWork.log.debug(e.backtrace)
+                raise StandardError
             end
             RazorWork.log.info("Tag #{name} created.")
         end
@@ -60,6 +79,7 @@ module RazorWork
                 RazorWork.log.error('Error while loading tag files.')
                 RazorWork.log.error(e.message)
                 RazorWork.log.debug(e.backtrace)
+                raise StandardError
             end
             RazorWork.log.info('tag files loaded.')
 
@@ -67,16 +87,25 @@ module RazorWork
             tag_files.each do |t|
                 config = YAML.load_file(t)
                 name = config['name']
-                RazorWork.log.debug("Loaded config for #{name}.")
+                RazorWork.log.info("Loaded config for #{name}.")
+                RazorWork.log.debug(config)
 
-                # Either update existing tag (if poss) or create new tag.
+                # Either update existing tag or create new tag.
                 if check_tag_exists(name)
+                    RazorWork.log.info("Tag #{name} found.")
+
                     if check_fields_updatable(name, config)
+                        RazorWork.log.info("Only updatable fields have changed;
+                            safe to continue.")
                         update_fields(name, config)
                     else
-                        # error: unsupported operation
+                        RazorWork.log.error("One or more fields have changed for
+                            which the razor API does not support in-place
+                            updates.")
+                        raise StandardError
                     end
                 else
+                    RazorWork.log.info("Tag #{name} not found; creating it.")
                     create_tag(name, config)
                 end
             end
@@ -100,7 +129,11 @@ module RazorWork
 
         def self.update_rule(name, value, force=true)
             document = { "name": name, "rule": value, "force": force }
-            RestClient.post($command_urls['update-tag-rule'], document)
+            RestClient.post(
+                $command_urls['update-tag-rule'],
+                document.to_json,
+                content_type: :json, accept: :json
+            )
         end
     end
 end
