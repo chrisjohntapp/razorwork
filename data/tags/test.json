@@ -1,7 +1,0 @@
-{
-  "name": "test",
-  "rule": ["and",
-            ["=", ["fact", "boardmanufacturer"], "Intel Corporation"],
-            ["=", ["fact", "processorcount"], "32"],
-            ["=", ["fact", "boardproductname"], "S2600GZ"]]
-}

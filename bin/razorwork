@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+$0 = 'razorwork'
+
+require 'razorwork'
+
+# Process command line options and run RazorWork
+# opts = RazorWork::CLI.parse_options
+# RazorWork::CLI.start(opts)
+
+RazorWork.setup
+RazorWork::Tags.sync

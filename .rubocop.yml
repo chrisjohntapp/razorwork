@@ -1,6 +1,7 @@
 Layout/IndentationWidth:
-  # Number of spaces for each indentation level.
   Width: 4
+Layout/SpaceAroundEqualsInParameterDefault:
+  EnforcedStyle: no_space
 AllCops:
   TargetRubyVersion: 2.3.3
 Style/DocumentationMethod:
