@@ -7,7 +7,7 @@ require 'rest-client'
 require 'json'
 require 'yaml'
 require 'logger'
-require_relative 'razorwork/tags.rb'
+require_relative 'razorwork/tag.rb'
 
 # Configuration.
 RAZOR_SERVER = 'razorserver'
@@ -42,5 +42,21 @@ module RazorWork
             @logger.datetime_format = '%Y-%m-%d %H:%M:%S '
         end
         @logger
+    end
+end
+
+module RazorError
+    # Razor error(s).
+    class APIError < StandardError
+        def initialize(msg='Interaction with the razor API failed.')
+            super
+        end
+    end
+
+    # Razor error(s).
+    class APILimitation < StandardError
+        def initialize(msg='Action not allowed by razor API.')
+            super
+        end
     end
 end

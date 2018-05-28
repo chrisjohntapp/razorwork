@@ -6,7 +6,14 @@ AllCops:
   TargetRubyVersion: 2.3.3
 Style/DocumentationMethod:
   RequireForNonPublicMethods: false
+#Style/Documentation: false
 Style/GlobalVars:
   AllowedVariables: ['$client', '$collection_urls', '$command_urls']
+Style/GuardClause:
+  Enabled: false
+Style/RedundantReturn:
+  Enabled: false
 Metrics/MethodLength:
   Max: 16
+Metrics/AbcSize:
+  Enabled: false
