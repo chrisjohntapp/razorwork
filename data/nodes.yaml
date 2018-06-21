@@ -1,12 +1,9 @@
 ---
 
 node14:
-  hostname: "7b-stg-esx-nq01"
-  fqdn: "7b-stg-esx-nq01.mps.lan"
+  hostname: "foo"
+  fqdn: "foo.laputa"
 node15:
-  hostname: "7b-stg-esx-nq02"
-  fqdn: "7b-stg-esx-nq02.mps.lan"
-node16:
-  hostname: "mh-stg-esx-01"
-  fqdn: "mh-stg-esx-01.mps.lan"
+  hostname: "bar"
+  fqdn: "bar.laputa"
   
